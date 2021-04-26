@@ -47,10 +47,12 @@ public class PDFDocument implements IDocument{
 		this.jframe = new JFrame();
 		this.jframe.setLayout(new BorderLayout());
 		
-		this.footerJPanel.setLayout(new BorderLayout());
-		
-		if(pdf.getNumberOfPages() > 1)
-			this.footerJPanel.add(buttonNext, BorderLayout.EAST);
+		this.footerJPanel.setLayout(new FlowLayout());
+		if(pdf.getNumberOfPages() > 1){
+			this.footerJPanel.add(buttonBack);
+			this.footerJPanel.add(buttonNext);
+			buttonBack.setVisible(false);
+		}
 
 		this.buttonNext.addActionListener(new ActionListener(){
 
@@ -64,13 +66,16 @@ public class PDFDocument implements IDocument{
 				jframe.revalidate();
 
 				if(indexPage >= 1){
-					footerJPanel.add(buttonBack, BorderLayout.WEST);
+					buttonBack.setVisible(true);
 					jframe.repaint();
 					jframe.revalidate();
 				}
 
-				if(indexPage + 1 == pdf.getNumberOfPages())
-					footerJPanel.remove(buttonNext);
+				if(indexPage + 1 == pdf.getNumberOfPages()){
+					buttonNext.setVisible(false);
+					jframe.repaint();
+					jframe.revalidate();
+				}
 			}
 
 		});
@@ -85,12 +90,9 @@ public class PDFDocument implements IDocument{
 				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
 				jframe.repaint();
 				jframe.revalidate();
-
-				if(indexPage == 0)
-					footerJPanel.remove(buttonNext);
 					
 				if(pdf.getNumberOfPages() > 1){
-					footerJPanel.add(buttonNext,BorderLayout.EAST);
+					buttonNext.setVisible(true);
 					jframe.repaint();
 					jframe.revalidate();
 				}
