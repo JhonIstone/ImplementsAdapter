@@ -6,10 +6,13 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -18,8 +21,14 @@ import interfaces.IDocument;
 
 public class PDFDocument implements IDocument{
 	
-	PDDocument pdf;
-	
+	private PDDocument pdf;
+	private JFrame jframe;
+	private JPanel[] panelImage;
+	private JPanel footerJPanel = new JPanel();
+	private int indexPage = 0;
+	private JButton buttonBack = new JButton("Back");
+	private JButton buttonNext = new JButton("Next");
+
 	@Override
 	public void open(File file) throws IOException {
 		// TODO Auto-generated method stub
@@ -32,20 +41,72 @@ public class PDFDocument implements IDocument{
 		// TODO Auto-generated method stub
 		PDFRenderer render = new PDFRenderer(pdf);
 		BufferedImage[] images = new BufferedImage[pdf.getNumberOfPages()];
+
+		this.panelImage = new JPanel[pdf.getNumberOfPages()];
+
+		this.jframe = new JFrame();
+		this.jframe.setLayout(new BorderLayout());
 		
-		JFrame jframe = new JFrame();
-		JPanel[] jpanel = new JPanel[pdf.getNumberOfPages()];
-		JScrollPane[] scrPanel = new JScrollPane[pdf.getNumberOfPages()];
+		this.footerJPanel.setLayout(new BorderLayout());
 		
+		if(pdf.getNumberOfPages() > 1)
+			this.footerJPanel.add(buttonNext, BorderLayout.EAST);
+
+		this.buttonNext.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				jframe.remove(panelImage[indexPage]);
+				indexPage++;
+				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
+				jframe.repaint();
+				jframe.revalidate();
+
+				if(indexPage >= 1){
+					footerJPanel.add(buttonBack, BorderLayout.WEST);
+					jframe.repaint();
+					jframe.revalidate();
+				}
+
+				if(indexPage + 1 == pdf.getNumberOfPages())
+					footerJPanel.remove(buttonNext);
+			}
+
+		});
+
+		this.buttonBack.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				jframe.remove(panelImage[indexPage]);
+				indexPage--;
+				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
+				jframe.repaint();
+				jframe.revalidate();
+
+				if(indexPage == 0)
+					footerJPanel.remove(buttonNext);
+					
+				if(pdf.getNumberOfPages() > 1){
+					footerJPanel.add(buttonNext,BorderLayout.EAST);
+					jframe.repaint();
+					jframe.revalidate();
+				}
+			}
+
+		});
+
 		int i;
 		for (i = 0; i < pdf.getNumberOfPages(); i++) {
 			images[i] = render.renderImage(i);
-			jpanel[i] = new JPanel();
-			jpanel[i].add(new JLabel(new ImageIcon(images[i])), BorderLayout.CENTER);
-			scrPanel[i] = new JScrollPane(jpanel[i]);
+			panelImage[i] = new JPanel();
+			panelImage[i].add(new JLabel(new ImageIcon(images[i])), BorderLayout.CENTER);
 		}
 		
-		jframe.add(scrPanel[1]);
+		jframe.add(this.panelImage[indexPage], BorderLayout.CENTER);
+		jframe.add(this.footerJPanel, BorderLayout.SOUTH);
 		jframe.pack();
 		jframe.setVisible(true);
 		pdf.close();

@@ -24,12 +24,17 @@ public class mainScreen extends JFrame implements ActionListener{
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e){
 		// TODO Auto-generated method stub
 		if(e.getActionCommand() == "Open File"){
 			this.dispose();
 			try {
-				new fileSelectorScreen();
+				try {
+					new fileSelectorScreen();
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
