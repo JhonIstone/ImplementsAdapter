@@ -77,7 +77,6 @@ public class PDFDocument implements IDocument{
 					jframe.revalidate();
 				}
 			}
-
 		});
 
 		this.buttonBack.addActionListener(new ActionListener(){
@@ -90,14 +89,19 @@ public class PDFDocument implements IDocument{
 				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
 				jframe.repaint();
 				jframe.revalidate();
-					
-				if(pdf.getNumberOfPages() > 1){
+				
+				if (indexPage == 0){
+					buttonBack.setVisible(false);
+					jframe.repaint();
+					jframe.revalidate();
+				}
+
+				if(indexPage < pdf.getNumberOfPages()){
 					buttonNext.setVisible(true);
 					jframe.repaint();
 					jframe.revalidate();
 				}
 			}
-
 		});
 
 		int i;
