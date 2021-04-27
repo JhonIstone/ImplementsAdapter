@@ -10,22 +10,18 @@ import interfaces.IDocument;
 public class client implements IDocument{
     
     private IDocument tDocument;
-
-    public client(IDocument tDocument, File file) throws IOException {
+    
+    public client(IDocument tDocument) throws IOException {
         this.tDocument = tDocument;
-        this.tDocument.open(file);
     }
     @Override
     public void open(File file) throws IOException {
-        // TODO Auto-generated method stub
         this.tDocument.open(file);
     }
 
     @Override
     public JFrame getEditor() throws IOException {
-        // TODO Auto-generated method stub
-        this.tDocument.getEditor();
-        return null;
+        return this.tDocument.getEditor();
     }
     
 }

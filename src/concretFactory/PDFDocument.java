@@ -31,14 +31,11 @@ public class PDFDocument implements IDocument{
 
 	@Override
 	public void open(File file) throws IOException {
-		// TODO Auto-generated method stub
         this.pdf = PDDocument.load(file);
-		getEditor();
 	}
 
 	@Override
 	public JFrame getEditor() throws IOException {
-		// TODO Auto-generated method stub
 		PDFRenderer render = new PDFRenderer(pdf);
 		BufferedImage[] images = new BufferedImage[pdf.getNumberOfPages()];
 
@@ -54,52 +51,50 @@ public class PDFDocument implements IDocument{
 			buttonBack.setVisible(false);
 		}
 
-		this.buttonNext.addActionListener(new ActionListener(){
-
-			@Override
+		buttonNext.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				jframe.remove(panelImage[indexPage]);
-				indexPage++;
-				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
-				jframe.repaint();
-				jframe.revalidate();
-
-				if(indexPage >= 1){
-					buttonBack.setVisible(true);
+				if(e.getActionCommand().equalsIgnoreCase("Next")){
+					jframe.remove(panelImage[indexPage]);
+					indexPage++;
+					jframe.add(panelImage[indexPage], BorderLayout.CENTER);
 					jframe.repaint();
 					jframe.revalidate();
-				}
 
-				if(indexPage + 1 == pdf.getNumberOfPages()){
-					buttonNext.setVisible(false);
-					jframe.repaint();
-					jframe.revalidate();
+					if(indexPage >= 1){
+						buttonBack.setVisible(true);
+						jframe.repaint();
+						jframe.revalidate();
+					}
+
+					if(indexPage + 1 == pdf.getNumberOfPages()){
+						buttonNext.setVisible(false);
+						jframe.repaint();
+						jframe.revalidate();
+					}
 				}
 			}
 		});
 
-		this.buttonBack.addActionListener(new ActionListener(){
-
-			@Override
+		buttonBack.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				jframe.remove(panelImage[indexPage]);
-				indexPage--;
-				jframe.add(panelImage[indexPage], BorderLayout.CENTER);
-				jframe.repaint();
-				jframe.revalidate();
-				
-				if (indexPage == 0){
-					buttonBack.setVisible(false);
+				if(e.getActionCommand().equalsIgnoreCase("Back")){
+					jframe.remove(panelImage[indexPage]);
+					indexPage--;
+					jframe.add(panelImage[indexPage], BorderLayout.CENTER);
 					jframe.repaint();
 					jframe.revalidate();
-				}
+					
+					if (indexPage == 0){
+						buttonBack.setVisible(false);
+						jframe.repaint();
+						jframe.revalidate();
+					}
 
-				if(indexPage < pdf.getNumberOfPages()){
-					buttonNext.setVisible(true);
-					jframe.repaint();
-					jframe.revalidate();
+					if(indexPage < pdf.getNumberOfPages()){
+						buttonNext.setVisible(true);
+						jframe.repaint();
+						jframe.revalidate();
+					}
 				}
 			}
 		});
@@ -114,8 +109,6 @@ public class PDFDocument implements IDocument{
 		jframe.add(this.panelImage[indexPage], BorderLayout.CENTER);
 		jframe.add(this.footerJPanel, BorderLayout.SOUTH);
 		jframe.pack();
-		jframe.setVisible(true);
-		pdf.close();
 		return jframe;
 	}
 	
